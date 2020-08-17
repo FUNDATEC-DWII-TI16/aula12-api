@@ -17,27 +17,17 @@ import com.hexsel.demoapi.model.Usuario;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/")
-public class ApiController {
+@RequestMapping("usuarios")
+public class UsuarioController {
 
-	@GetMapping("")
-	public String index() {
-		return "Demo API - Usuarios - FUNDATEC - DWII";
-	}
-
-	private static List<Usuario> usuariosDoBanco = List.of(
-			new Usuario(10L, "Usuario 10", true),
-			new Usuario(11L, "Usuario 11", false),
-			new Usuario(12L, "Usuario 12", true),
-			new Usuario(13L, "Usuario 13", true),
-			new Usuario(14L, "Usuario 14", false),
-			new Usuario(15L, "Usuario 15", false),
-			new Usuario(16L, "Usuario 16", true),
-			new Usuario(17L, "Usuario 17", true),
-			new Usuario(18L, "Usuario 18", false),
+	private static List<Usuario> usuariosDoBanco = List.of(new Usuario(10L, "Usuario 10", true),
+			new Usuario(11L, "Usuario 11", false), new Usuario(12L, "Usuario 12", true),
+			new Usuario(13L, "Usuario 13", true), new Usuario(14L, "Usuario 14", false),
+			new Usuario(15L, "Usuario 15", false), new Usuario(16L, "Usuario 16", true),
+			new Usuario(17L, "Usuario 17", true), new Usuario(18L, "Usuario 18", false),
 			new Usuario(19L, "Usuario 19", true));
 
-	@GetMapping("/usuarios/demorado/{id}")
+	@GetMapping("/demorado/{id}")
 	public Usuario usuarioByIdDemorado(@PathVariable("id") Long id) throws InterruptedException {
 
 		Thread.sleep(5000);
@@ -45,30 +35,26 @@ public class ApiController {
 		return usuarioById(id);
 	}
 
-	@GetMapping("/usuarios")
+	@GetMapping("")
 	public List<Usuario> usuarios() {
 		return usuariosDoBanco;
 	}
 
-	@GetMapping("/usuarios/{id}")
+	@GetMapping("/{id}")
 	public Usuario usuarioById(@PathVariable("id") Long id) {
-		return usuariosDoBanco.stream().filter(f -> f.getId().equals(id)).findFirst().orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
+		return usuariosDoBanco.stream().filter(f -> f.getId().equals(id)).findFirst()
+				.orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
 	}
 
-	@GetMapping("/serverError")
-	public void error() {
-		throw new RuntimeException("Erro no servidor");
-	}
-
-	@PostMapping("/usuarios")
+	@PostMapping("")
 	public String alteraUsuario(@RequestBody Usuario usuario) {
-		Usuario usuarioDoBanco = usuariosDoBanco.stream().filter(f -> f.getId().equals(usuario.getId())).findFirst().orElse(null);
+		Usuario usuarioDoBanco = usuariosDoBanco.stream().filter(f -> f.getId().equals(usuario.getId())).findFirst()
+				.orElse(null);
 
 		usuarioDoBanco.setNome(usuario.getNome());
 		usuarioDoBanco.setAtivo(usuario.getAtivo());
 
 		return "ok";
-
 	}
 
 }
